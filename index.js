@@ -80,6 +80,14 @@ app.delete("/posts/:id", async (req, res) => {
     }
 });
 
+app.get("/", async (req, res) => {
+    try {
+        res.json("HomePage");
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 app.listen(PORT, () => {
     console.log("Now listening on port: " + PORT);
 });
