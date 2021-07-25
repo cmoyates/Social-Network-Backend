@@ -83,6 +83,7 @@ app.delete("/posts/:id", async (req, res) => {
 app.get("/", async (req, res) => {
     try {
         res.json("HomePage");
+        console.log("I just want to know where I can see this");
     } catch (error) {
         console.log(error.message);
     }
