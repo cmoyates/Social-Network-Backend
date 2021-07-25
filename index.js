@@ -7,6 +7,11 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+if (process.env.NODE_ENV === "production") 
+{
+    console.log("Production!");
+}
+
 // Create
 app.post("/posts", async (req, res) => {    
     try {
