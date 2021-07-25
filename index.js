@@ -76,5 +76,5 @@ app.delete("/posts/:id", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("Wooooo!");
+    console.log("Now listening on port: " + PORT);
 });
