@@ -10,7 +10,7 @@ const devConfig = {
 };
 
 const proConfig = {
-    connectionString: process.env.DATABASE_URL
+    connectionString: process.env.DATABASE_URL + "?ssl=true"
 };
 
 const pool = new Pool((process.env.NODE_ENV === "production") ? proConfig : devConfig);
