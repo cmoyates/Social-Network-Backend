@@ -82,11 +82,12 @@ app.delete("/posts/:id", async (req, res) => {
 // Create
 app.post("/profiles", async (req, res) => {    
     try {
+        console.log(req.body)
         const {user_email, user_name, img_url} = req.body;
         console.log("Username: " + user_name + ", Email: " + user_email + ", Image URL: " + img_url);
         const newProfile = await pool.query(
             "INSERT INTO profiles (user_email, user_name, img_url, primary_color, dark_mode) VALUES($1, $2, $3, $4, $5) RETURNING *",
-            [user_name, content, likes, null, false]
+            [user_email, user_name, img_url, null, false]
         );
         res.json(newProfile.rows[0])
     } catch (error) {
@@ -133,15 +134,15 @@ app.get("/profiles/email/:email", async (req, res) => {
 });
 
 // Update
-/*app.put("/profiles/:id", async (req, res) => {
+app.put("/profiles/:id", async (req, res) => {
     try {
         const {id} = req.params;
-        const {user_name, content, likes} = req.body;
-        const updatedPost = await pool.query(
-            "UPDATE posts SET user_name = $1, content = $2, likes = $3 WHERE post_id = $4", 
-            [user_name, content, likes, id]
+        const {user_email, user_name, img_url, primary_color, dark_mode} = req.body;
+        const updatedProfile = await pool.query(
+            "UPDATE profiles SET user_email = $1, user_name = $2, img_url = $3, primary_color = $4, dark_mode = $5 WHERE profile_id = $6", 
+            [user_email, user_name, img_url, primary_color, dark_mode, id]
         );
-        res.json("Post was updated!");
+        res.json("Profile was updated!");
     } catch (error) {
         console.log(error.message);
     }
@@ -151,15 +152,15 @@ app.get("/profiles/email/:email", async (req, res) => {
 app.delete("/profiles/:id", async (req, res) => {
     try {
         const {id} = req.params;
-        const deletePost = await pool.query(
-            "DELETE FROM posts WHERE post_id = $1",
+        const deleteProfile = await pool.query(
+            "DELETE FROM profiles WHERE profile_id = $1",
             [id]
         );
-        res.json("Post was deleted!");
+        res.json("Profile was deleted!");
     } catch (error) {
         console.log(error.message);
     }
-});*/
+});
 
 
 
