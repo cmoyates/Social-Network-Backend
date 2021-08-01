@@ -87,7 +87,7 @@ app.post("/profiles", async (req, res) => {
         console.log("Username: " + user_name + ", Email: " + user_email + ", Image URL: " + img_url);
         const newProfile = await pool.query(
             "INSERT INTO profiles (user_email, user_name, img_url, primary_color, dark_mode) VALUES($1, $2, $3, $4, $5) RETURNING *",
-            [user_email, user_name, img_url, null, false]
+            [user_email, user_name, img_url, '#3f50b5', false]
         );
         res.json(newProfile.rows[0])
     } catch (error) {
@@ -166,7 +166,7 @@ app.delete("/profiles/:id", async (req, res) => {
 
 app.get("/", async (req, res) => {
     try {
-        res.json("HomePage");
+        res.json("Still Working!");
     } catch (error) {
         console.log(error.message);
     }
