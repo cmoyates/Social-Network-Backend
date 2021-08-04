@@ -6,7 +6,8 @@ CREATE TABLE posts(
     user_name TEXT NOT NULL,
     user_img TEXT NOT NULL,
     content TEXT NOT NULL,
-    likes SMALLINT NOT NULL
+    likes SMALLINT [],
+    comments JSON NOT NULL
 );
 
 CREATE TABLE profiles(

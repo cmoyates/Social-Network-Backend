@@ -12,11 +12,11 @@ app.use(express.json());
 // Create
 app.post("/posts", async (req, res) => {    
     try {
-        const {user_id, user_name, user_img, content, likes} = req.body;
-        console.log("Username: " + user_name + " (ID: " + user_id + "), Content: " + content + ", Likes: " + likes);
+        const {user_id, user_name, user_img, content} = req.body;
+        console.log("Username: " + user_name + " (ID: " + user_id + "), Content: " + content);
         const newPost = await pool.query(
-            "INSERT INTO posts (user_id, user_name, user_img, content, likes) VALUES($1, $2, $3, $4, $5) RETURNING *",
-            [user_id, user_name, user_img, content, likes]
+            "INSERT INTO posts (user_id, user_name, user_img, content, likes, comments) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
+            [user_id, user_name, user_img, content, [], {}]
         );
         res.json(newPost.rows[0])
     } catch (error) {
@@ -52,10 +52,10 @@ app.get("/posts/:id", async (req, res) => {
 app.put("/posts/:id", async (req, res) => {
     try {
         const {id} = req.params;
-        const {user_id, user_name, user_img, content, likes} = req.body;
+        const {user_id, user_name, user_img, content, likes, comments} = req.body;
         const updatedPost = await pool.query(
-            "UPDATE posts SET user_id = $1, user_name = $2, user_img = $3, content = $4, likes = $5 WHERE post_id = $6", 
-            [user_id, user_name, user_img, content, likes, id]
+            "UPDATE posts SET user_id = $1, user_name = $2, user_img = $3, content = $4, likes = $5, comments = $6 WHERE post_id = $7", 
+            [user_id, user_name, user_img, content, likes, comments, id]
         );
         res.json("Post was updated!");
     } catch (error) {
