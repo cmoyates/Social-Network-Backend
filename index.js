@@ -16,7 +16,7 @@ app.post("/posts", async (req, res) => {
         console.log("Username: " + user_name + " (ID: " + user_id + "), Content: " + content);
         const newPost = await pool.query(
             "INSERT INTO posts (user_id, user_name, user_img, content, likes, comments) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
-            [user_id, user_name, user_img, content, [], {}]
+            [user_id, user_name, user_img, content, [], {"commentList": []}]
         );
         res.json(newPost.rows[0])
     } catch (error) {
