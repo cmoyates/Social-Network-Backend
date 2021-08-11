@@ -49,7 +49,22 @@ app.get("/posts/user/:id", async (req, res) => {
 });
 
 // Get all posts by users that a given user is following
-// TODO
+app.get("/posts/following/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const profile = await pool.query(
+            "SELECT * FROM profiles WHERE profile_id = $1",
+            [id]
+        );
+        const allPosts = await pool.query(
+            "SELECT * FROM posts WHERE user_id = ANY($1::int[])",
+            [profile.rows[0].profiles_following]
+        );
+        res.json(allPosts.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
 
 // Get one
 app.get("/posts/:id", async (req, res) => {
