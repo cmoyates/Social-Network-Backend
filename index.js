@@ -48,6 +48,9 @@ app.get("/posts/user/:id", async (req, res) => {
     }
 });
 
+// Get all posts by users that a given user is following
+// TODO
+
 // Get one
 app.get("/posts/:id", async (req, res) => {
     try {
@@ -100,8 +103,8 @@ app.post("/profiles", async (req, res) => {
         const {user_email, user_name, img_url} = req.body;
         console.log("Username: " + user_name + ", Email: " + user_email + ", Image URL: " + img_url);
         const newProfile = await pool.query(
-            "INSERT INTO profiles (user_email, user_name, img_url, primary_color, dark_mode) VALUES($1, $2, $3, $4, $5) RETURNING *",
-            [user_email, user_name, img_url, '#3f50b5', false]
+            "INSERT INTO profiles (user_email, user_name, img_url, profiles_following, primary_color, dark_mode) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
+            [user_email, user_name, img_url, [], '#3f50b5', false]
         );
         res.json(newProfile.rows[0])
     } catch (error) {
@@ -151,10 +154,10 @@ app.get("/profiles/email/:email", async (req, res) => {
 app.put("/profiles/:id", async (req, res) => {
     try {
         const {id} = req.params;
-        const {user_email, user_name, img_url, primary_color, dark_mode} = req.body;
+        const {user_email, user_name, img_url, profiles_following, primary_color, dark_mode} = req.body;
         const updatedProfile = await pool.query(
-            "UPDATE profiles SET user_email = $1, user_name = $2, img_url = $3, primary_color = $4, dark_mode = $5 WHERE profile_id = $6", 
-            [user_email, user_name, img_url, primary_color, dark_mode, id]
+            "UPDATE profiles SET user_email = $1, user_name = $2, img_url = $3, profiles_following = $4, primary_color = $5, dark_mode = $6 WHERE profile_id = $7", 
+            [user_email, user_name, img_url, profiles_following, primary_color, dark_mode, id]
         );
         res.json("Profile was updated!");
     } catch (error) {
