@@ -27,7 +27,7 @@ app.post("/posts", async (req, res) => {
 // Get all
 app.get("/posts", async (req, res) => {
     try {
-        const allPosts = await pool.query("SELECT * FROM posts");
+        const allPosts = await pool.query("SELECT * FROM posts ORDER BY post_id DESC");
         res.json(allPosts.rows);
     } catch (error) {
         console.log(error.message);
@@ -39,7 +39,7 @@ app.get("/posts/user/:id", async (req, res) => {
     try {
         const {id} = req.params;
         const allPosts = await pool.query(
-            "SELECT * FROM posts WHERE user_id = $1",
+            "SELECT * FROM posts WHERE user_id = $1 ORDER BY post_id DESC",
             [id]
         );
         res.json(allPosts.rows);
@@ -57,7 +57,7 @@ app.get("/posts/following/:id", async (req, res) => {
             [id]
         );
         const allPosts = await pool.query(
-            "SELECT * FROM posts WHERE user_id = ANY($1::int[])",
+            "SELECT * FROM posts WHERE user_id = ANY($1::int[]) ORDER BY post_id DESC",
             [profile.rows[0].profiles_following]
         );
         res.json(allPosts.rows);
