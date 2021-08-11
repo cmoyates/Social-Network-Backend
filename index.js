@@ -34,6 +34,20 @@ app.get("/posts", async (req, res) => {
     }
 });
 
+// Get all from specified user
+app.get("/posts/user/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const allPosts = await pool.query(
+            "SELECT * FROM posts WHERE user_id = $1",
+            [id]
+        );
+        res.json(allPosts.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 // Get one
 app.get("/posts/:id", async (req, res) => {
     try {
