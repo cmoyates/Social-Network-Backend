@@ -137,6 +137,25 @@ app.get("/profiles", async (req, res) => {
     }
 });
 
+// Get all followed by (ID)
+app.get("/profiles/following/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const profile = await pool.query(
+            "SELECT * FROM profiles WHERE profile_id = $1",
+            [id]
+        );
+        const following = profile.rows[0].profiles_following
+        const allProfiles = await pool.query(
+            "SELECT * FROM profiles WHERE profile_id = ANY($1::int[])",
+            [following]
+        );
+        res.json(allProfiles.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 // Get one (ID)
 app.get("/profiles/:id", async (req, res) => {
     try {
