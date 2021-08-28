@@ -223,6 +223,91 @@ app.delete("/profiles/:id", async (req, res) => {
 });
 
 
+// Chats
+
+// Create
+app.post("/chats", async (req, res) => {    
+    try {
+        const {room_name, participants} = req.body;
+        console.log("Room name: " + room_name);
+        const newChat = await pool.query(
+            "INSERT INTO chats (room_name, participants, messages) VALUES($1, $2, $3) RETURNING *",
+            [room_name, participants, {"messageList": []}]
+        );
+        res.json(newChat.rows[0])
+    } catch (error) {
+        console.log(error.message);
+    }
+})
+
+// Get one
+app.get("/chats/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const chat = await pool.query(
+            "SELECT * FROM chats WHERE chat_id = $1",
+            [id]
+        );
+        res.json(chat.rows[0]);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
+// Get all
+app.get("/chats", async (req, res) => {
+    try {
+        const allChats = await pool.query("SELECT * FROM chats ORDER BY chat_id DESC");
+        res.json(allChats.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
+// Get all involving (id)
+app.get("/chats/profile/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const allChats = await pool.query(
+            "SELECT * FROM chats WHERE $1 = ANY (participants::int[])",
+            [id]    
+        );
+        res.json(allChats.rows);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
+// Update
+app.put("/chats/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const {room_name, participants, messages} = req.body;
+        const updatedChat = await pool.query(
+            "UPDATE chats SET room_name = $1, participants = $2, messages = $3 WHERE chat_id = $4", 
+            [room_name, participants, messages, id]
+        );
+        res.json("Chat was updated!");
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
+// Delete
+app.delete("/chats/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const deleteChat = await pool.query(
+            "DELETE FROM chats WHERE chat_id = $1",
+            [id]
+        );
+        res.json("Chat was deleted!");
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
+
 
 app.get("/", async (req, res) => {
     try {
