@@ -20,7 +20,7 @@ CREATE TABLE profiles(
     dark_mode BOOLEAN NOT NULL
 );
 
-CREATE TABLE chat(
+CREATE TABLE chats(
     chat_id SERIAL PRIMARY KEY,
     room_name TEXT NOT NULL,
     participants SMALLINT [],
