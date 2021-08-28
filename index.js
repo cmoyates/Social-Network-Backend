@@ -254,6 +254,20 @@ app.get("/chats/:id", async (req, res) => {
     }
 });
 
+// Get one by (room_name)
+app.get("/chats/room/:room_name", async (req, res) => {
+    try {
+        const {room_name} = req.params;
+        const chat = await pool.query(
+            "SELECT * FROM chats WHERE room_name = $1",
+            [room_name]
+        );
+        res.json(chat.rows[0]);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 // Get all
 app.get("/chats", async (req, res) => {
     try {
