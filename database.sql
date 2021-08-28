@@ -19,3 +19,10 @@ CREATE TABLE profiles(
     primary_color TEXT,
     dark_mode BOOLEAN NOT NULL
 );
+
+CREATE TABLE chat(
+    chat_id SERIAL PRIMARY KEY,
+    room_name TEXT NOT NULL,
+    participants SMALLINT [],
+    messages JSON NOT NULL
+);
