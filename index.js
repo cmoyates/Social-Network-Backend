@@ -340,8 +340,8 @@ io.on('connection', (socket) => {
 
         if (error) return callback(error);
 
-        socket.emit('message', {user: 'Admin', text: `${user.name} welcome to the room ${user.room}`});
-        socket.broadcast.to(user.room).emit('message', {user: 'Admin', text: `${user.name} has joined the room`})
+        socket.emit('message', {user: 'Admin', text: `${user.name} welcome to the room ${user.room}`, from_id: -1});
+        socket.broadcast.to(user.room).emit('message', {user: 'Admin', text: `${user.name} has joined the room` , from_id: -1})
 
         socket.join(user.room);
         console.log(`User ${user.name} connected`)
@@ -363,7 +363,7 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id);
 
         if (user) {
-            io.to(user.room).emit('message', {user: "Admin", text: `${user.name} has left.`})
+            io.to(user.room).emit('message', {user: "Admin", text: `${user.name} has left.`, from_id: -1})
             io.to(user.room).emit('roomData', {room: user.room, users: getUsersInRoom(user.room)})
         }
     })
