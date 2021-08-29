@@ -335,8 +335,8 @@ app.get("/", async (req, res) => {
 // Live Chat
 io.on('connection', (socket) => {
 
-    socket.on('join', ({name, room}, callback) => {
-        const {error, user} = addUser({id: socket.id, name, room});
+    socket.on('join', ({name, profile_id, room}, callback) => {
+        const {error, user} = addUser({id: socket.id, name, profile_id, room});
 
         if (error) return callback(error);
 
