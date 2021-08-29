@@ -23,6 +23,6 @@ CREATE TABLE profiles(
 CREATE TABLE chats(
     chat_id SERIAL PRIMARY KEY,
     room_name TEXT NOT NULL,
-    participants SMALLINT [],
+    participants JSON [],
     messages JSON NOT NULL
 );

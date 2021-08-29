@@ -283,8 +283,8 @@ app.get("/chats/profile/:id", async (req, res) => {
     try {
         const {id} = req.params;
         const allChats = await pool.query(
-            "SELECT * FROM chats WHERE $1 = ANY (participants::int[])",
-            [id]    
+            "SELECT * FROM chats WHERE $1 = (participants[1]->>'profile_id')::int OR $1 = (participants[2]->>'profile_id')::int;",
+            [parseInt(id)]    
         );
         res.json(allChats.rows);
     } catch (error) {
@@ -370,6 +370,6 @@ io.on('connection', (socket) => {
 });
 
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log("Now listening on port: " + PORT);
 });
