@@ -267,6 +267,13 @@ app.get("/chats/room/:room_name", async (req, res) => {
         console.log(error.message);
     }
 });
+const getOneChatByRoomName = async (room_name) => {
+    const chat = await pool.query(
+        "SELECT * FROM chats WHERE room_name = $1",
+        [room_name]
+    );
+    return chat.rows[0];
+}
 
 // Get all
 app.get("/chats", async (req, res) => {
@@ -306,6 +313,13 @@ app.put("/chats/:id", async (req, res) => {
         console.log(error.message);
     }
 });
+const updateChat = async (chat) => {
+    const {chat_id, room_name, participants, messages} = chat;
+    await pool.query(
+        "UPDATE chats SET room_name = $1, participants = $2, messages = $3 WHERE chat_id = $4", 
+        [room_name, participants, messages, chat_id]
+    );
+}
 
 // Delete
 app.delete("/chats/:id", async (req, res) => {
@@ -332,6 +346,13 @@ app.get("/", async (req, res) => {
 });
 
 
+const updateChatMessages = async (user, message) => {
+    let chat = await getOneChatByRoomName(user.room);
+    chat.messages.messageList.push(message);
+    await updateChat(chat);
+}
+
+
 // Live Chat
 io.on('connection', (socket) => {
 
@@ -339,9 +360,6 @@ io.on('connection', (socket) => {
         const {error, user} = addUser({id: socket.id, name, profile_id, room});
 
         if (error) return callback(error);
-
-        //socket.emit('message', {user: 'Admin', text: `${user.name} welcome to the room ${user.room}`, from_id: -1});
-        //socket.broadcast.to(user.room).emit('message', {user: 'Admin', text: `${user.name} has joined the room` , from_id: -1})
 
         socket.join(user.room);
         console.log(`User ${user.name} connected`)
@@ -354,7 +372,9 @@ io.on('connection', (socket) => {
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
         
-        io.to(user.room).emit('message', {user: user.name, text: message, from_id: user.profile_id});
+        const messageObj = {user: user.name, text: message, from_id: user.profile_id};
+        io.to(user.room).emit('message', messageObj);
+        updateChatMessages(user, messageObj);
 
         callback();
     })
@@ -363,7 +383,6 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id);
 
         if (user) {
-            //io.to(user.room).emit('message', {user: "Admin", text: `${user.name} has left.`, from_id: -1})
             io.to(user.room).emit('roomData', {room: user.room, users: getUsersInRoom(user.room)})
         }
     })
