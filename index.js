@@ -8,7 +8,7 @@ const io = socketio(server, {
         origin: "*"
     }
 });
-const {addUser, removeUser, getUser, getUsersInRoom} = require('./users');
+const {addUser, removeUser, getUser, getUserByProfileID, getUsersInRoom, usersList} = require('./users');
 const cors = require("cors");
 const pool = require("./db");
 const PORT = process.env.PORT || 5000;
@@ -371,12 +371,22 @@ io.on('connection', (socket) => {
 
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id);
-        
+        console.log(message)
         const messageObj = {user: user.name, text: message, from_id: user.profile_id};
         io.to(user.room).emit('message', messageObj);
         updateChatMessages(user, messageObj);
 
         callback();
+    })
+
+    socket.on('newChat', (profile_id) => {
+
+        const otherUser = getUserByProfileID(profile_id)
+
+        console.log(otherUser);
+        if (otherUser) {
+            io.to(otherUser.id).emit('chatHasBeenMade');
+        }
     })
 
     socket.on('disconnect', () => {
