@@ -1,7 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
 const Post = require("../models/post");
-const Profile = require("../models/profile");
 
 describe('Model Tests', () => {
     let post;
@@ -124,7 +123,7 @@ describe('API Tests', () => {
     test('should should delete the post from the database', async () => {
         await request(app).delete(`/posts/${post2.post_id}`);
         const res = await request(app).get(`/posts/${post2.post_id}`);
-        expect(res.body).toBe("No post exists with that ID");
+        expect(res.body).toEqual("No post exists with that ID");
     })
 })
 

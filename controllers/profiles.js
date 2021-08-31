@@ -33,7 +33,7 @@ const getOne = async (req, res) => {
     try {
         const {id} = req.params;
         const obj = await Profile.getOne(id);
-        res.json(obj);
+        res.json((obj) ? obj : "No profiles exist with that ID");
     } catch (error) {
         console.log(error.message);
     }
