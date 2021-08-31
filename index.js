@@ -1,35 +1,15 @@
-const express = require("express");
-const post_router = require("./routes/posts");
-const profile_router = require("./routes/profiles");
-const chat_router = require("./routes/chats");
-const chat_controller = require("./controllers/chats");
-const app = express();
+const app = require("./app");
+
 const http = require('http');
 const server = http.createServer(app);
-const socketio = require('socket.io')
+const socketio = require('socket.io');
 const io = socketio(server, {
     cors: {
         origin: "*"
     }
 });
+const chat_controller = require("./controllers/chats");
 const {addUser, removeUser, getUser, getUserByProfileID, getUsersInRoom} = require('./users');
-const cors = require("cors");
-const PORT = process.env.PORT || 5000;
-
-
-app.use(cors());
-app.use(express.json());
-app.use("/posts", post_router);
-app.use("/profiles", profile_router);
-app.use("/chats", chat_router);
-
-app.get("/", async (req, res) => {
-    try {
-        res.json("Still Working!");
-    } catch (error) {
-        console.log(error.message);
-    }
-});
 
 
 io.on('connection', (socket) => {
@@ -79,6 +59,8 @@ io.on('connection', (socket) => {
     })
 });
 
+
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
     console.log("Now listening on port: " + PORT);

@@ -5,3 +5,6 @@
 
 # misc
 .env
+
+# coverage folder
+/coverage
