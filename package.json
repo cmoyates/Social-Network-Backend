@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon index.js"
   },
   "author": "",
@@ -19,5 +19,10 @@
   },
   "engines": {
     "node": "15.13.0"
+  },
+  "devDependencies": {
+    "install": "^0.13.0",
+    "jest": "^27.1.0",
+    "npm": "^7.21.1"
   }
 }
