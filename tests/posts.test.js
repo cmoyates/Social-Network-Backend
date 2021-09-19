@@ -91,14 +91,12 @@ describe('API Tests', () => {
         });
         let profile = res.body;
         profile.profiles_following.push(post2.user_id);
-        const {user_email, user_name, img_url, profiles_following, primary_color, dark_mode} = profile;
+        const {user_email, user_name, img_url, profiles_following} = profile;
         await request(app).put(`/profiles/${profile.profile_id}`).send({
             user_email,
             user_name,
             img_url,
-            profiles_following,
-            primary_color,
-            dark_mode
+            profiles_following
         });
         const anotherRes = await request(app).get(`/posts/following/${profile.profile_id}`);
         const allPosts = anotherRes.body;

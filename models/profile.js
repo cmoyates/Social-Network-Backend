@@ -1,20 +1,18 @@
 const pool = require("../db");
 
 class Profile {
-    constructor(id, user_email, user_name, img_url, profiles_following, primary_color, dark_mode) {
+    constructor(id, user_email, user_name, img_url, profiles_following) {
         this.profile_id = id;
         this.user_email = user_email;
         this.user_name = user_name;
         this.img_url = img_url;
         this.profiles_following = profiles_following;
-        this.primary_color = primary_color;
-        this.dark_mode = dark_mode;
     }
 
     static async create(user_email, user_name, img_url) {
         const newProfile = await pool.query(
-            "INSERT INTO profiles (user_email, user_name, img_url, profiles_following, primary_color, dark_mode) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
-            [user_email, user_name, img_url, [], '#3f50b5', false]
+            "INSERT INTO profiles (user_email, user_name, img_url, profiles_following) VALUES($1, $2, $3, $4) RETURNING *",
+            [user_email, user_name, img_url, []]
         );
         return newProfile.rows[0];
     }
@@ -50,10 +48,10 @@ class Profile {
         return profile.rows[0];
     }
 
-    static async update(id, user_email, user_name, img_url, profiles_following, primary_color, dark_mode) {
+    static async update(id, user_email, user_name, img_url, profiles_following) {
         await pool.query(
-            "UPDATE profiles SET user_email = $1, user_name = $2, img_url = $3, profiles_following = $4, primary_color = $5, dark_mode = $6 WHERE profile_id = $7", 
-            [user_email, user_name, img_url, profiles_following, primary_color, dark_mode, id]
+            "UPDATE profiles SET user_email = $1, user_name = $2, img_url = $3, profiles_following = $4 WHERE profile_id = $5", 
+            [user_email, user_name, img_url, profiles_following, id]
         );
     }
 

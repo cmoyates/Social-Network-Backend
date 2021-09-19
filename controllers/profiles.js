@@ -52,8 +52,8 @@ const getOneByEmail = async (req, res) => {
 const update = async (req, res) => {
     try {
         const {id} = req.params;
-        const {user_email, user_name, img_url, profiles_following, primary_color, dark_mode} = req.body;
-        await Profile.update(id, user_email, user_name, img_url, profiles_following, primary_color, dark_mode);
+        const {user_email, user_name, img_url, profiles_following} = req.body;
+        await Profile.update(id, user_email, user_name, img_url, profiles_following);
         res.json("Profile was updated!");
     } catch (error) {
         console.log(error.message);

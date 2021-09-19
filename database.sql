@@ -15,9 +15,7 @@ CREATE TABLE profiles(
     user_email TEXT NOT NULL,
     user_name TEXT NOT NULL,
     img_url TEXT NOT NULL,
-    profiles_following SMALLINT [],
-    primary_color TEXT,
-    dark_mode BOOLEAN NOT NULL
+    profiles_following SMALLINT []
 );
 
 CREATE TABLE chats(

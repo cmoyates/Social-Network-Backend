@@ -12,17 +12,13 @@ describe('Model Tests', () => {
             "email@email.email",
             "Name Name",
             "img.url",
-            [11],
-            "",
-            false
+            [11]
         );
         expect(profileObj.profile_id).toBe(11);
         expect(profileObj.user_email).toEqual("email@email.email");
         expect(profileObj.user_name).toEqual("Name Name");
         expect(profileObj.img_url).toEqual("img.url");
         expect(profileObj.profiles_following[0]).toBe(11);
-        expect(profileObj.primary_color).toEqual("");
-        expect(profileObj.dark_mode).toBe(false);
     })
     test('should add a post to the database and retrieve it', async () => {
         profile = await Profile.create(
@@ -37,17 +33,15 @@ describe('Model Tests', () => {
         const allProfiles = await Profile.getAll();
         expect(allProfiles.length).toBeGreaterThan(0);
     })
-    test('should update a post and profile the updated version', async () => {
+    test('should update a profile and retrieve the updated version', async () => {
         profile.profiles_following.push(profile.profile_id);
-        const {user_email, user_name, img_url, profiles_following, primary_color, dark_mode} = profile;
+        const {user_email, user_name, img_url, profiles_following} = profile;
         await Profile.update(
             profile.profile_id,
             user_email,
             user_name,
             img_url,
-            profiles_following,
-            primary_color,
-            dark_mode
+            profiles_following
         );
         const anotherProfile = await Profile.getOne(profile.profile_id);
         expect(anotherProfile).toEqual(profile);
@@ -94,9 +88,9 @@ describe('API Tests', () => {
     })
     test('should update a post and profile the updated version', async () => {
         profile2.profiles_following.push(profile2.profile_id);
-        const {user_email, user_name, img_url, profiles_following, primary_color, dark_mode} = profile2;
+        const {user_email, user_name, img_url, profiles_following} = profile2;
         await request(app).put(`/profiles/${profile2.profile_id}`).send({
-            user_email, user_name, img_url, profiles_following, primary_color, dark_mode
+            user_email, user_name, img_url, profiles_following
         });
         const res = await request(app).get(`/profiles/${profile2.profile_id}`);
         const anotherProfile = res.body;
